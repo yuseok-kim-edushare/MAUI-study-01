@@ -2,6 +2,13 @@
 
 .NET MAUI study project for mobile app development - demonstrating basic mobile app features with push notifications, background services, and device capabilities.
 
+## Platform Support
+
+| Platform | Target/Build Version | Minimum Support | Notes |
+| --- | --- | --- | --- |
+| **Android** | API 36 (Android 15) | API 30 (Android 11) | 16KB page size support enabled |
+| **iOS** | iOS 26 SDK (Xcode 26) | iOS 17.0 | Latest Swift API and security frameworks |
+
 ## Features
 
 This project demonstrates:
@@ -13,7 +20,7 @@ This project demonstrates:
 
 ### 2. Push Notification Pipeline
 - **IPushNotificationService**: Interface for receiving alerts from backend server
-- **Notification Handling**: Pipeline ready for Firebase Cloud Messaging integration
+- **ASP.NET Core Integration**: Ready for SignalR or native push notification integration
 - **Event-based Architecture**: Notification events can trigger UI updates
 
 ### 3. Background Services
@@ -29,8 +36,8 @@ When the app is in the foreground, users can access:
 
 ### 5. API Communication Pipeline
 - **IApiService**: Interface for backend API communication
-- **RESTful API Support**: Ready for integration with backend server
-- **Authentication Flow**: Supports token-based authentication
+- **ASP.NET Core Backend Support**: Ready for integration with ASP.NET Core Web API
+- **Authentication Flow**: Supports JWT token-based authentication
 - **Data Exchange**: Send and receive data from backend
 
 ## Project Structure
@@ -47,21 +54,38 @@ MauiStudyApp/
 │   ├── PushNotificationService.cs   # Push notification implementation
 │   └── BackgroundSessionService.cs  # Background session manager
 ├── Platforms/
-│   └── Android/
-│       └── AndroidManifest.xml # Android permissions configuration
+│   ├── Android/
+│   │   └── AndroidManifest.xml # Android permissions (API 30-36)
+│   └── iOS/
+│       └── Info.plist          # iOS permissions (iOS 17.0+)
 └── MauiProgram.cs             # App startup and DI configuration
 ```
 
-## Android Permissions
+## Platform-Specific Configurations
 
-The app requests the following permissions (configured in `AndroidManifest.xml`):
+### Android (API 30-36 with 16KB Page Support)
 
-- **Internet & Network**: For API communication
-- **Camera**: For capturing photos
-- **Storage**: For accessing photo gallery
-- **Location**: For GPS functionality
-- **Wake Lock**: For background service operation
-- **Push Notifications**: For receiving alerts from backend
+The app is configured for:
+- **Minimum SDK**: API 30 (Android 11)
+- **Target SDK**: API 36 (Android 15)
+- **16KB Page Size**: Enabled for Google Play compliance
+- **Foreground Service**: Data sync type for background session
+
+Permissions configured:
+- Internet & Network, Camera, Storage, Location
+- Wake Lock, Push Notifications
+- Foreground Service (for background session maintenance)
+
+### iOS (iOS 17.0+)
+
+The app is configured for:
+- **Minimum iOS Version**: 17.0
+- **Target SDK**: iOS 26 SDK (Xcode 26)
+- **Background Modes**: Fetch and remote notifications
+
+Permissions configured:
+- Camera usage, Photo library access, Location services
+- Background modes for session maintenance
 
 ## Getting Started
 
@@ -69,6 +93,7 @@ The app requests the following permissions (configured in `AndroidManifest.xml`)
 - .NET 10 SDK or later
 - .NET MAUI workload installed (`dotnet workload install maui`)
 - Android SDK (for Android development)
+- Xcode 26 (for iOS development on macOS)
 
 ### Build and Run
 
@@ -84,6 +109,9 @@ dotnet build
 
 # Run on Android device/emulator
 dotnet build -t:Run -f net10.0-android
+
+# Run on iOS simulator (macOS only)
+dotnet build -t:Run -f net10.0-ios
 ```
 
 ## Configuration
@@ -91,23 +119,39 @@ dotnet build -t:Run -f net10.0-android
 ### API Backend URL
 Update the backend API URL in `Services/ApiService.cs`:
 ```csharp
-private const string BaseUrl = "https://your-backend-api.com/api";
+public ApiService(HttpClient httpClient)
+{
+    _httpClient = httpClient;
+    var baseUrl = "https://your-backend-api.com/api"; // Update with your ASP.NET Core server URL
+    _httpClient.BaseAddress = new Uri(baseUrl);
+}
 ```
 
 ### Push Notifications
-To enable push notifications:
-1. Set up Firebase Cloud Messaging for Android
-2. Implement device token registration in `PushNotificationService.cs`
-3. Configure notification handling in `BackgroundSessionService.cs`
+To enable push notifications with ASP.NET Core backend:
+1. **Option 1**: Use SignalR for real-time push (recommended for cross-platform)
+2. **Option 2**: Use native push (APNs for iOS, FCM for Android) via backend
+3. Implement device token registration in `PushNotificationService.cs`
+4. Configure notification handling in `BackgroundSessionService.cs`
+
+See [IMPLEMENTATION_GUIDE.md](MauiStudyApp/IMPLEMENTATION_GUIDE.md) for detailed instructions.
+
+## Backend Integration
+
+This app is designed to work with an ASP.NET Core backend. See the implementation guide for:
+- Setting up ASP.NET Core Web API
+- JWT authentication configuration
+- SignalR real-time notifications
+- Device token management
 
 ## Future Enhancements
 
-- [ ] Implement actual Firebase Cloud Messaging integration
-- [ ] Add iOS support (requires iOS workload)
-- [ ] Implement real API backend integration
+- [ ] Complete SignalR/native push notification integration
+- [ ] Implement real ASP.NET Core backend API
 - [ ] Add data caching for offline support
 - [ ] Implement biometric authentication
 - [ ] Add more device capabilities (contacts, SMS, etc.)
+- [ ] Implement token refresh mechanism
 
 ## License
 

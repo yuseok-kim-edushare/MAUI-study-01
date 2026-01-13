@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<!-- Multi-platform support: Android and iOS -->
+		<!-- Note: iOS build requires macOS with Xcode 26 -->
+		<!-- For development on non-macOS systems, use Android-only target -->
+		<!-- <TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks> -->
+		<!-- Uncomment above and comment below line when iOS workload is available -->
 		<TargetFrameworks>net10.0-android</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
@@ -22,7 +27,33 @@
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<!-- Android Configuration: API 36 target, API 30 minimum -->
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+		<TargetFrameworkVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">v15.0</TargetFrameworkVersion>
+		
+		<!-- iOS Configuration: iOS 17.0 minimum -->
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">17.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<!-- Android 16KB Page Size Support (required for API 35+) -->
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<AndroidEnablePreloadAssemblies>false</AndroidEnablePreloadAssemblies>
+		<AndroidLinkTool>r8</AndroidLinkTool>
+		<!-- Enable support for 16KB page size -->
+		<AndroidPageSize>16384</AndroidPageSize>
+	</PropertyGroup>
+	
+	<!-- Debug configuration: disable linker and stripping -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug' AND $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<AndroidLinkMode>None</AndroidLinkMode>
+		<AndroidStripILAfterAOT>false</AndroidStripILAfterAOT>
+	</PropertyGroup>
+	
+	<!-- Release configuration: full linking and stripping -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' AND $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<AndroidLinkMode>Full</AndroidLinkMode>
+		<AndroidStripILAfterAOT>true</AndroidStripILAfterAOT>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup>
