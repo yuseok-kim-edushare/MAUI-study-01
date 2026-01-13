@@ -67,7 +67,7 @@ The app requests the following permissions (configured in `AndroidManifest.xml`)
 
 ### Prerequisites
 - .NET 10 SDK or later
-- .NET MAUI workload installed (`dotnet workload install maui-android`)
+- .NET MAUI workload installed (`dotnet workload install maui`)
 - Android SDK (for Android development)
 
 ### Build and Run

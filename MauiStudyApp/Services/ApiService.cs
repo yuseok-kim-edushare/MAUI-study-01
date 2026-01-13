@@ -12,13 +12,14 @@ public class ApiService : IApiService
     private readonly HttpClient _httpClient;
     private string? _authToken;
 
-    // TODO: Configure actual backend API URL
-    private const string BaseUrl = "https://your-backend-api.com/api";
-
     public ApiService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(BaseUrl);
+        
+        // TODO: Configure actual backend API URL
+        // You can set this from app configuration or environment variable
+        var baseUrl = "https://your-backend-api.com/api";
+        _httpClient.BaseAddress = new Uri(baseUrl);
     }
 
     public async Task<bool> AuthenticateAsync(string userId, string password)

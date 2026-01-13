@@ -20,7 +20,7 @@ public partial class HomePage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Failed to load user info: {ex.Message}", "OK");
+            await this.DisplayAlertAsync("Error", $"Failed to load user info: {ex.Message}", "OK");
         }
     }
 
@@ -33,25 +33,25 @@ public partial class HomePage : ContentPage
                 var photo = await MediaPicker.Default.CapturePhotoAsync();
                 if (photo != null)
                 {
-                    await DisplayAlertAsync("Success", $"Photo captured: {photo.FileName}", "OK");
+                    await this.DisplayAlertAsync("Success", $"Photo captured: {photo.FileName}", "OK");
                 }
             }
             else
             {
-                await DisplayAlertAsync("Not Supported", "Camera is not supported on this device", "OK");
+                await this.DisplayAlertAsync("Not Supported", "Camera is not supported on this device", "OK");
             }
         }
         catch (FeatureNotSupportedException)
         {
-            await DisplayAlertAsync("Not Supported", "Camera is not supported on this device", "OK");
+            await this.DisplayAlertAsync("Not Supported", "Camera is not supported on this device", "OK");
         }
         catch (PermissionException)
         {
-            await DisplayAlertAsync("Permission Denied", "Camera permission is required", "OK");
+            await this.DisplayAlertAsync("Permission Denied", "Camera permission is required", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Failed to use camera: {ex.Message}", "OK");
+            await this.DisplayAlertAsync("Error", $"Failed to use camera: {ex.Message}", "OK");
         }
     }
 
@@ -62,20 +62,20 @@ public partial class HomePage : ContentPage
             var results = await MediaPicker.Default.PickPhotosAsync();
             if (results != null && results.Any())
             {
-                await DisplayAlertAsync("Success", $"Photo selected: {results.First().FileName}", "OK");
+                await this.DisplayAlertAsync("Success", $"Photo selected: {results.First().FileName}", "OK");
             }
         }
         catch (FeatureNotSupportedException)
         {
-            await DisplayAlertAsync("Not Supported", "Photo picker is not supported on this device", "OK");
+            await this.DisplayAlertAsync("Not Supported", "Photo picker is not supported on this device", "OK");
         }
         catch (PermissionException)
         {
-            await DisplayAlertAsync("Permission Denied", "Storage permission is required", "OK");
+            await this.DisplayAlertAsync("Permission Denied", "Storage permission is required", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Failed to pick photo: {ex.Message}", "OK");
+            await this.DisplayAlertAsync("Error", $"Failed to pick photo: {ex.Message}", "OK");
         }
     }
 
@@ -91,28 +91,28 @@ public partial class HomePage : ContentPage
 
             if (location != null)
             {
-                await DisplayAlertAsync("Location",
+                await this.DisplayAlertAsync("Location",
                     $"Latitude: {location.Latitude}\nLongitude: {location.Longitude}\nAltitude: {location.Altitude}",
                     "OK");
             }
         }
         catch (FeatureNotSupportedException)
         {
-            await DisplayAlertAsync("Not Supported", "GPS is not supported on this device", "OK");
+            await this.DisplayAlertAsync("Not Supported", "GPS is not supported on this device", "OK");
         }
         catch (PermissionException)
         {
-            await DisplayAlertAsync("Permission Denied", "Location permission is required", "OK");
+            await this.DisplayAlertAsync("Permission Denied", "Location permission is required", "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", $"Failed to get location: {ex.Message}", "OK");
+            await this.DisplayAlertAsync("Error", $"Failed to get location: {ex.Message}", "OK");
         }
     }
 
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlertAsync("Logout", "Are you sure you want to logout?", "Yes", "No");
+        bool confirm = await this.DisplayAlertAsync("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
             // Clear stored credentials

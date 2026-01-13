@@ -23,7 +23,7 @@ cd MAUI-study-01
 ### 2. Install .NET MAUI Workload (if not already installed)
 
 ```bash
-dotnet workload install maui-android
+dotnet workload install maui
 ```
 
 ### 3. Navigate to the Project
