@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiStudyApp.Pages.HomePage"
+             Title="Home">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <Label
+                Text="Welcome to MAUI Study App"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1"
+                Margin="0,20,0,0" />
+
+            <Label
+                x:Name="WelcomeLabel"
+                Text="You are logged in!"
+                FontSize="16" />
+
+            <Label
+                Text="Available Features:"
+                FontSize="18"
+                FontAttributes="Bold"
+                Margin="0,20,0,0" />
+
+            <Button
+                x:Name="CameraButton"
+                Text="📷 Use Camera"
+                Clicked="OnCameraClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="PhotoButton"
+                Text="🖼️ Pick Photo"
+                Clicked="OnPhotoClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="LocationButton"
+                Text="📍 Get GPS Location"
+                Clicked="OnLocationClicked"
+                HorizontalOptions="Fill" />
+
+            <Frame
+                Padding="15"
+                Margin="0,20,0,0"
+                BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#333333}">
+                <VerticalStackLayout Spacing="10">
+                    <Label
+                        Text="Background Services"
+                        FontSize="16"
+                        FontAttributes="Bold" />
+                    <Label
+                        x:Name="BackgroundServiceStatus"
+                        Text="Status: Running"
+                        FontSize="14"
+                        TextColor="Green" />
+                    <Label
+                        Text="• Push notification pipeline: Active"
+                        FontSize="12" />
+                    <Label
+                        Text="• Session maintenance: Active"
+                        FontSize="12" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button
+                x:Name="LogoutButton"
+                Text="Logout"
+                Clicked="OnLogoutClicked"
+                BackgroundColor="Red"
+                TextColor="White"
+                Margin="0,30,0,20"
+                HorizontalOptions="Fill" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
