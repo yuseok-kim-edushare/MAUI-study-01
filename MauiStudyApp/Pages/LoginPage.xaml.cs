@@ -41,9 +41,19 @@ public partial class LoginPage : ContentPage
             // For now, simulate authentication
             await Task.Delay(1000); // Simulate network delay
 
-            // Store login state (in production, use secure storage)
-            await SecureStorage.SetAsync("user_id", userId);
-            await SecureStorage.SetAsync("is_logged_in", "true");
+            // Store login state (prefer SecureStorage, fall back to Preferences)
+            try
+            {
+                await SecureStorage.SetAsync("user_id", userId);
+                await SecureStorage.SetAsync("is_logged_in", "true");
+            }
+            catch (Exception secureEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"SecureStorage write failed: {secureEx.Message}");
+            }
+
+            Preferences.Set("user_id", userId);
+            Preferences.Set("is_logged_in", true);
 
             // Navigate to main page
             await Shell.Current.GoToAsync("//main");

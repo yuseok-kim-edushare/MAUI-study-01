@@ -12,7 +12,21 @@ public partial class HomePage : ContentPage
     {
         try
         {
-            var userId = await SecureStorage.GetAsync("user_id");
+            string? userId = null;
+            try
+            {
+                userId = await SecureStorage.GetAsync("user_id");
+            }
+            catch (Exception secureEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"SecureStorage read failed: {secureEx.Message}");
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = Preferences.Get("user_id", string.Empty);
+            }
+
             if (!string.IsNullOrEmpty(userId))
             {
                 WelcomeLabel.Text = $"Welcome, {userId}!";
@@ -117,6 +131,8 @@ public partial class HomePage : ContentPage
         {
             // Clear stored credentials
             SecureStorage.RemoveAll();
+            Preferences.Remove("user_id");
+            Preferences.Remove("is_logged_in");
 
             // Navigate to login page
             await Shell.Current.GoToAsync("//login");

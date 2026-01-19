@@ -22,21 +22,33 @@ public partial class App : Application
 	{
 		base.OnStart();
 
-		// Check if user is already logged in
-		var isLoggedIn = await SecureStorage.GetAsync("is_logged_in");
-		if (isLoggedIn == "true")
+		await MainThread.InvokeOnMainThreadAsync(async () =>
 		{
-			// Navigate to home page
-			await Shell.Current.GoToAsync("//main");
-			
-			// Start background service
-			await _backgroundService.StartAsync();
-		}
-		else
-		{
-			// Navigate to login page
-			await Shell.Current.GoToAsync("//login");
-		}
+			try
+			{
+				// Check if user is already logged in
+				var isLoggedIn = await GetIsLoggedInAsync();
+				if (isLoggedIn)
+				{
+					// Navigate to home page
+					await Shell.Current.GoToAsync("//main");
+					
+					// Start background service
+					await _backgroundService.StartAsync();
+				}
+				else
+				{
+					// Navigate to login page
+					await Shell.Current.GoToAsync("//login");
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"Startup navigation error: {ex.Message}");
+				// Fall back to login page on any startup error
+				await Shell.Current.GoToAsync("//login");
+			}
+		});
 	}
 
 	protected override async void OnSleep()
@@ -49,10 +61,28 @@ public partial class App : Application
 	{
 		base.OnResume();
 		// Ensure background service is running if logged in
-		var isLoggedIn = await SecureStorage.GetAsync("is_logged_in");
-		if (isLoggedIn == "true")
+		if (await GetIsLoggedInAsync())
 		{
 			await _backgroundService.StartAsync();
 		}
+	}
+
+	private static async Task<bool> GetIsLoggedInAsync()
+	{
+		try
+		{
+			var isLoggedIn = await SecureStorage.GetAsync("is_logged_in");
+			if (string.Equals(isLoggedIn, "true", StringComparison.OrdinalIgnoreCase))
+			{
+				return true;
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"SecureStorage read failed: {ex.Message}");
+		}
+
+		// Fallback for devices without secure lock screen
+		return Preferences.Get("is_logged_in", false);
 	}
 }
