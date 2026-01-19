@@ -41,7 +41,11 @@ dotnet restore
 ### 5. Build the Project
 
 ```bash
-dotnet build
+# Fast build on Windows (Android) with SDK paths and API base URL
+dotnet build -f net10.0-android -c Debug \
+   -p:AndroidSdkDirectory=c:\android-sdk \
+   -p:JavaSdkDirectory="C:\Program Files\Eclipse Adoptium\jdk-21.0.9.10-hotspot" \
+   -p:ApiBaseUrl=https://your-backend-api.com/api
 ```
 
 ## Running the App
@@ -127,7 +131,8 @@ MauiStudyApp/
 ### For Development
 
 1. **Configure Backend API**
-   - Update API URL in `Services/ApiService.cs`
+   - Pass `ApiBaseUrl` at build time
+   - Example: `-p:ApiBaseUrl=https://your-backend-api.com/api`
    - See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)
 
 2. **Set Up Push Notifications**

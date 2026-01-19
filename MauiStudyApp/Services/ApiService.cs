@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.Net.Http.Json;
+using System.Reflection;
 
 namespace MauiStudyApp.Services;
 
@@ -16,9 +16,7 @@ public class ApiService : IApiService
     {
         _httpClient = httpClient;
         
-        // TODO: Configure actual backend API URL
-        // You can set this from app configuration or environment variable
-        var baseUrl = "https://your-backend-api.com/api";
+        var baseUrl = ResolveBaseUrl();
         _httpClient.BaseAddress = new Uri(baseUrl);
     }
 
@@ -110,5 +108,25 @@ public class ApiService : IApiService
     private class AuthResponse
     {
         public string? Token { get; set; }
+    }
+
+    private static string ResolveBaseUrl()
+    {
+        var baseUrl = GetAssemblyMetadata("ApiBaseUrl");
+        if (!string.IsNullOrWhiteSpace(baseUrl))
+        {
+            return baseUrl;
+        }
+
+        return "https://your-backend-api.com/api";
+    }
+
+    private static string? GetAssemblyMetadata(string key)
+    {
+        return typeof(ApiService)
+            .Assembly
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => string.Equals(a.Key, key, StringComparison.OrdinalIgnoreCase))
+            ?.Value;
     }
 }

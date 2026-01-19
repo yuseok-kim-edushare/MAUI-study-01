@@ -1,0 +1,6 @@
+@MauiStudyBackend_HostAddress = http://localhost:5102
+
+GET {{MauiStudyBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

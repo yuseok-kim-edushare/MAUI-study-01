@@ -15,15 +15,13 @@ This guide provides detailed instructions for implementing the backend API integ
 
 2. **Update API Base URL in Mobile App**
    
-   Edit `MauiStudyApp/Services/ApiService.cs`:
-   ```csharp
-   public ApiService(HttpClient httpClient)
-   {
-       _httpClient = httpClient;
-       var baseUrl = "https://your-backend-api.com/api"; // Update with your server URL
-       _httpClient.BaseAddress = new Uri(baseUrl);
-   }
-   ```
+    Pass the base URL at build time using the `ApiBaseUrl` MSBuild property:
+    ```bash
+    dotnet build -f net10.0-android -c Debug \
+      -p:ApiBaseUrl=https://your-backend-api.com/api
+    ```
+
+    The app reads this value from assembly metadata at runtime via `ApiService.ResolveBaseUrl()`.
 
 3. **Implement Authentication Endpoint in ASP.NET Core**
 

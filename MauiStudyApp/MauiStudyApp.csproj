@@ -33,6 +33,9 @@
 		
 		<!-- iOS Configuration: iOS 17.0 minimum -->
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">17.0</SupportedOSPlatformVersion>
+
+		<!-- Build-time API base URL (override with: dotnet build -p:ApiBaseUrl=https://host/api) -->
+		<ApiBaseUrl>https://your-backend-api.com/api</ApiBaseUrl>
 	</PropertyGroup>
 
 	<!-- Android 16KB Page Size Support (required for API 35+) -->
@@ -76,7 +79,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyMetadata Include="ApiBaseUrl" Value="$(ApiBaseUrl)" />
 	</ItemGroup>
 
 </Project>

@@ -104,8 +104,11 @@ cd MauiStudyApp
 # Restore dependencies
 dotnet restore
 
-# Build the project
-dotnet build
+# Fast build on Windows (Android) with SDK paths and API base URL
+dotnet build -f net10.0-android -c Debug \
+    -p:AndroidSdkDirectory=c:\android-sdk \
+    -p:JavaSdkDirectory="C:\Program Files\Eclipse Adoptium\jdk-21.0.9.10-hotspot" \
+    -p:ApiBaseUrl=https://your-backend-api.com/api
 
 # Run on Android device/emulator
 dotnet build -t:Run -f net10.0-android
@@ -117,15 +120,14 @@ dotnet build -t:Run -f net10.0-ios
 ## Configuration
 
 ### API Backend URL
-Update the backend API URL in `Services/ApiService.cs`:
-```csharp
-public ApiService(HttpClient httpClient)
-{
-    _httpClient = httpClient;
-    var baseUrl = "https://your-backend-api.com/api"; // Update with your ASP.NET Core server URL
-    _httpClient.BaseAddress = new Uri(baseUrl);
-}
+Pass the backend API URL at build time using MSBuild property `ApiBaseUrl`:
+
+```bash
+dotnet build -f net10.0-android -c Debug \
+    -p:ApiBaseUrl=https://your-backend-api.com/api
 ```
+
+The app reads this value from assembly metadata at runtime (see `ApiService.ResolveBaseUrl()`). If not provided, it falls back to `https://your-backend-api.com/api`.
 
 ### Push Notifications
 To enable push notifications with ASP.NET Core backend:

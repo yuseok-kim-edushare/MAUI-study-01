@@ -4,6 +4,10 @@ This file contains configuration options for the MAUI Study App.
 
 ## Environment Configuration
 
+> **Note**: The app reads `ApiBaseUrl` from build-time assembly metadata. Provide it with
+> `-p:ApiBaseUrl=https://your-backend-api.com/api` when building. The JSON samples below
+> are conceptual examples only.
+
 ### Development
 ```json
 {

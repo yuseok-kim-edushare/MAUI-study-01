@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/MauiStudyapp/">
+    <Project Path="MauiStudyapp/MauiStudyApp.csproj" />
+  </Folder>
+  <Project Path="MauiStudyBackend/MauiStudyBackend.csproj" />
+</Solution>
